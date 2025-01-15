@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id    String   @id @default(uuid())
+  name  String 
+  email     String   @unique
+  password  String
+  role Role @default(USER)
+  isVerified Boolean @default(false)
+  orders Order[]
+  messages Message[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+}
+
+model Order {
+  id String @id @default(uuid())
+  description String
+  specifications String
+  quantity Int
+  state  OrderState @default(REVIEWING)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  chatRoom ChatRoom?
+}
+
+enum OrderState {
+  REVIEWING
+  PROCESSING
+  COMPLETED
+}
+
+model ChatRoom {
+  id          String    @id @default(uuid())
+  orderId     String    @unique
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  isClosed    Boolean   @default(false)
+  summary     String?
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  chatRoomId String
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  senderId   String
+  sender     User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content    String
+  timestamp  DateTime @default(now())
+}
