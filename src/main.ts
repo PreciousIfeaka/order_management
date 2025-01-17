@@ -2,6 +2,8 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ConfigService } from "@nestjs/config";
 import { Logger } from "nestjs-pino";
+import https from "http";
+import cron from "node-cron";
 import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from "@nestjs/swagger";
 
 async function bootstrap() {
@@ -56,17 +58,17 @@ bootstrap().catch((err) => {
   process.exit(1);
 });
 
-// function keepAlive(url: string) {
-//   https
-//     .get(url, (res) => {
-//       log.info(`Status: ${res.statusCode}`);
-//     })
-//     .on("error", (error) => {
-//       log.error(`Error: ${error.message}`);
-//     });
-// }
+function keepAlive(url: string) {
+  https
+    .get(url, (res) => {
+      console.log(`Status: ${res.statusCode}`);
+    })
+    .on("error", (error) => {
+      console.error(`Error: ${error.message}`);
+    });
+}
 
-// cron.schedule("*/5 * * * *", () => {
-//   keepAlive("https://petrx-backend.onrender.com");
-//   log.info("Pinging the server every 5 minutes");
-// });
+cron.schedule("*/10 * * * *", () => {
+  keepAlive("https://petrx-backend.onrender.com");
+  console.log("Pinging the server every 5 minutes");
+});
