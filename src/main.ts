@@ -55,3 +55,18 @@ bootstrap().catch((err) => {
   console.error("Error during bootstrap", err);
   process.exit(1);
 });
+
+// function keepAlive(url: string) {
+//   https
+//     .get(url, (res) => {
+//       log.info(`Status: ${res.statusCode}`);
+//     })
+//     .on("error", (error) => {
+//       log.error(`Error: ${error.message}`);
+//     });
+// }
+
+// cron.schedule("*/5 * * * *", () => {
+//   keepAlive("https://petrx-backend.onrender.com");
+//   log.info("Pinging the server every 5 minutes");
+// });
