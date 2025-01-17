@@ -23,16 +23,20 @@ async function bootstrap() {
 
   app.setGlobalPrefix("/api", { exclude: ["/api", "/"]})
   const port = app.get<ConfigService>(ConfigService).get<number>("server.port");
-  const be_url: string = app.get<ConfigService>(ConfigService).get("server.be_url");
-  const ws_url = be_url.split(":")[1];
+  const be_dev_url: string = app.get<ConfigService>(ConfigService).get("server.be_dev_url");
+  const be_prod_url: string = app.get<ConfigService>(ConfigService).get("server.be_prod_url");
+  const ws_dev_url = be_dev_url.split(":")[1];
+  const ws_prod_url = be_prod_url.split(":")[1];
 
   const config = new DocumentBuilder()
     .setTitle("Order-Chat Management Documentation")
     .setDescription("API For Managing the Order of users Through Chats Interactions with Admins")
     .setVersion("1.0")
     .addBearerAuth()
-    .addServer(`${be_url}:${port}/`, "Local Development Server")
-    .addServer(`ws:${ws_url}:${port}/`, "WebSocket Server")
+    .addServer(`${be_dev_url}:${port}/`, "Development Server")
+    .addServer(`ws:${ws_dev_url}:${port}/`, "WebSocket Dev Server")
+    .addServer(`${be_prod_url}`, "Production Server")
+    .addServer(`ws:${ws_prod_url}`, "WebSocket Production Server")
     .build();
 
   const customOptions: SwaggerCustomOptions = {
