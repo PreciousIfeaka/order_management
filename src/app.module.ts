@@ -15,6 +15,7 @@ import { ChatRoomModule } from './modules/chat-room/chat-room.module';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
 import { LoggerModule } from 'nestjs-pino';
 import { CronModule } from './cron/cron.module';
+import { GoogleModule } from "./modules/google/google.module";
 
 @Module({
   controllers: [AppController],
@@ -67,7 +68,8 @@ import { CronModule } from './cron/cron.module';
     AuthModule,
     OrdersModule,
     ChatRoomModule,
-    CronModule
+    CronModule,
+    GoogleModule
   ]
 })
 export class AppModule {}

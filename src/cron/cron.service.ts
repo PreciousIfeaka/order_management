@@ -9,7 +9,6 @@ export class CronService implements OnApplicationBootstrap {
   private readonly logger = new Logger(CronService.name);
 
   onApplicationBootstrap() {
-    this.logger.log("CronService initialized and scheduling keepAlive");
     this.scheduleKeepAlive();
   };
 
@@ -26,9 +25,9 @@ export class CronService implements OnApplicationBootstrap {
   private scheduleKeepAlive() {
     const url = this.configService.get<string>("server.be_prod_url");
 
-    cron.schedule("*/5 * * * *", () => {
+    cron.schedule("*/10 * * * *", () => {
       this.keepAlive(url);
-      this.logger.log("✅ Pinging the server every 5 minute");
+      this.logger.log("✅ Pinging the server every 10 minute");
     });
   } 
 }

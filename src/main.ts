@@ -27,6 +27,9 @@ async function bootstrap() {
   const be_prod_url: string = app.get<ConfigService>(ConfigService).get("server.be_prod_url");
   const ws_dev_url = be_dev_url.split(":")[1];
   const ws_prod_url = be_prod_url.split(":")[1];
+  const clientId = app.get<ConfigService>(ConfigService).get<string>("auth.google_client_id");
+  const clientSecret = app.get<ConfigService>(ConfigService).get<string>("auth.google_oauth_secret");
+  const callback_url = app.get<ConfigService>(ConfigService).get<string>("auth.google_callback_url");
 
   const config = new DocumentBuilder()
     .setTitle("Order-Chat Management Documentation")
@@ -37,6 +40,20 @@ async function bootstrap() {
     .addServer(`ws:${ws_dev_url}:${port}/`, "WebSocket Dev Server")
     .addServer(`${be_prod_url}`, "Production Server")
     .addServer(`ws:${ws_prod_url}`, "WebSocket Production Server")
+    .addOAuth2({
+      type: "oauth2",
+      flows: {
+        authorizationCode: {
+          authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+          tokenUrl: "https://oauth2.googleapis.com/token",
+          scopes: {
+            openid: "OpenID Connect",
+            email: "Access email",
+            profile: "Access profile",
+          },
+        },
+      },
+    })
     .build();
 
   const customOptions: SwaggerCustomOptions = {
@@ -44,8 +61,18 @@ async function bootstrap() {
       persistAuthorization: true,
     }
   };
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api-docs", app, document);
+  SwaggerModule.setup("api-docs", app, document, {
+    swaggerOptions: {
+      oauth2RedirectUrl: callback_url,
+      initOAuth: {
+        clientId,
+        clientSecret,
+        scopes: ["email", "profile"]
+      },
+    },
+  });
 
   await app.listen(process.env.PORT);
 
