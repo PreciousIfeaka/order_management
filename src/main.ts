@@ -14,7 +14,7 @@ async function bootstrap() {
       "Origin",
       "X-Requested-With",
       "Content-Type",
-      "Authorization",
+      "Authorization"
     ],
   });
 
@@ -56,15 +56,10 @@ async function bootstrap() {
     })
     .build();
 
-  const customOptions: SwaggerCustomOptions = {
-    swaggerOptions: {
-      persistAuthorization: true,
-    }
-  };
-
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api-docs", app, document, {
     swaggerOptions: {
+      persistAuthorization: true,
       oauth2RedirectUrl: callback_url,
       initOAuth: {
         clientId,
@@ -76,7 +71,7 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT || 3000);
 
-  logger.log(`Server started 🚀 on port: ${port}`);
+  logger.log(`Server started on port: ${port}`);
 }
 bootstrap().catch((err) => {
   console.error("Error during bootstrap", err);

@@ -27,7 +27,7 @@ export class CronService implements OnApplicationBootstrap {
 
     cron.schedule("*/10 * * * *", () => {
       this.keepAlive(url);
-      this.logger.log("✅ Pinging the server every 10 minute");
+      this.logger.log("Pinging the server every 10 minute");
     });
   } 
 }
