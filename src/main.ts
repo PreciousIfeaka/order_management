@@ -71,6 +71,12 @@ async function bootstrap() {
 
   await app.listen(port);
 
+  const used = process.memoryUsage();
+  logger.log('Memory usage at startup:');
+  for (const key in used) {
+    logger.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+  }
+
   logger.log(`Server started on port: ${port}`);
 }
 bootstrap().catch((err) => {
