@@ -7,6 +7,14 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const logger = app.get(Logger);
+
+  const used = process.memoryUsage();
+  logger.log('Memory usage at startup:');
+  for (const key in used) {
+    logger.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
+  }
+
   app.enableCors({
     origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
@@ -18,7 +26,6 @@ async function bootstrap() {
     ],
   });
 
-  const logger = app.get(Logger);
   app.useLogger(logger);
 
   app.setGlobalPrefix("/api", { exclude: ["/api", "/"]})
@@ -70,12 +77,6 @@ async function bootstrap() {
   });
 
   await app.listen(port);
-
-  const used = process.memoryUsage();
-  logger.log('Memory usage at startup:');
-  for (const key in used) {
-    logger.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`);
-  }
 
   logger.log(`Server started on port: ${port}`);
 }
