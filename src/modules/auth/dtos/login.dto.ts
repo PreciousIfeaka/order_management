@@ -10,5 +10,5 @@ export class LoginDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  readonly password: string
+  readonly password: string;
 }

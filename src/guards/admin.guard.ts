@@ -11,10 +11,10 @@ export class AdminGuard implements CanActivate {
     const userId = request.user.sub;
 
     const admin = await this.prisma.user.findUnique({
-      where: { id: userId, role: Role.ADMIN }
+      where: { id: userId, role: Role.ADMIN },
     });
 
-    if (!admin) return false
-    else return true
+    if (!admin) return false;
+    else return true;
   }
-} 
+}

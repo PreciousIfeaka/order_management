@@ -1,6 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ApiExcludeEndpoint } from '@nestjs/swagger';
+import { Controller, Get } from "@nestjs/common";
+import { AppService } from "./app.service";
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
 
 @Controller()
 export class AppController {
@@ -8,13 +8,13 @@ export class AppController {
 
   @Get("/")
   @ApiExcludeEndpoint()
-    async home() {
-      return this.appService.homeResponder();
-    };
+  async home() {
+    return this.appService.homeResponder();
+  }
 
-    @Get("/api")
-    @ApiExcludeEndpoint()
-    async api() {
-      return this.appService.apiResponder();
-    }
+  @Get("/api")
+  @ApiExcludeEndpoint()
+  async api() {
+    return this.appService.apiResponder();
+  }
 }

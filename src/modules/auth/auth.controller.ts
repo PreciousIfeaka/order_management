@@ -2,9 +2,15 @@ import { Body, Controller, Post, Query } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginDto } from "./dtos/login.dto";
-import { ApiBadRequestResponse, ApiConflictResponse, ApiOperation, ApiResponse, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
-import { AuthResponseDto } from "./dtos/authResponse.dto";
-
+import {
+  ApiBadRequestResponse,
+  ApiConflictResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
+import { AuthResponseDto } from "./dtos/auth-response.dto";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -25,7 +31,11 @@ export class AuthController {
           type: "object",
           properties: {
             status_code: { type: "number", example: 400 },
-            message: { type: "array", items: { type: "string" }, example: ["email must be an email"] },
+            message: {
+              type: "array",
+              items: { type: "string" },
+              example: ["email must be an email"],
+            },
             success: { type: "boolean", example: false },
           },
         },
@@ -48,9 +58,11 @@ export class AuthController {
     },
   })
   @Post("register")
-  async registerUser(@Body() registerUserDto: RegisterUserDto): Promise<AuthResponseDto> {
-    return await this.authService.createAccount(registerUserDto)
-  };
+  async registerUser(
+    @Body() registerUserDto: RegisterUserDto,
+  ): Promise<AuthResponseDto> {
+    return await this.authService.createAccount(registerUserDto);
+  }
 
   @ApiOperation({ summary: "User Login" })
   @ApiResponse({
@@ -81,7 +93,11 @@ export class AuthController {
           type: "object",
           properties: {
             status_code: { type: "number", example: 400 },
-            message: { type: "array", items: { type: "string" }, example: ["password must be a string"] },
+            message: {
+              type: "array",
+              items: { type: "string" },
+              example: ["password must be a string"],
+            },
             success: { type: "boolean", example: false },
           },
         },
@@ -91,7 +107,7 @@ export class AuthController {
   @Post("login")
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.signIn(loginDto.email, loginDto.password);
-  };
+  }
 
   @ApiOperation({ summary: "Google Auth" })
   @ApiResponse({

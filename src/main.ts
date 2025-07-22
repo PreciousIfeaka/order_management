@@ -14,14 +14,14 @@ async function bootstrap() {
       "Origin",
       "X-Requested-With",
       "Content-Type",
-      "Authorization"
+      "Authorization",
     ],
   });
 
   const logger = app.get(Logger);
   app.useLogger(logger);
 
-  app.setGlobalPrefix("/api", { exclude: ["/api", "/"]});
+  app.setGlobalPrefix("/api", { exclude: ["/api", "/"] });
 
   const configService = app.get(ConfigService);
 
@@ -33,7 +33,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle("Order-Chat Management Documentation")
-    .setDescription("API For Managing the Order of users Through Chats Interactions with Admins")
+    .setDescription(
+      "API For Managing the Order of users Through Chats Interactions with Admins",
+    )
     .setVersion("1.0")
     .addBearerAuth()
     .addServer(`${be_dev_url}:${port}/`, "Development Server")

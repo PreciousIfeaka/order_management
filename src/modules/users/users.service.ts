@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service";
 import * as bcrypt from "bcrypt";
 import { ConfigService } from "@nestjs/config";
@@ -7,10 +11,13 @@ import { RegisterUserDto } from "../auth/dtos/register-user.dto";
 
 @Injectable()
 export class UserService {
-  constructor( private prisma: PrismaService, private configService: ConfigService) {}
+  constructor(
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
   async createUser(createUserPayload: RegisterUserDto): Promise<{
-    message: string,
-    user: Partial<User>
+    message: string;
+    user: Partial<User>;
   }> {
     const findUser = await this.prisma.user.findUnique({
       where: { email: createUserPayload.email },
@@ -22,31 +29,38 @@ export class UserService {
     createUserPayload.password = hashedPassword;
 
     const adminSecretVal = this.configService.get("auth.adminSecret");
-    const role = createUserPayload.admin_secret && adminSecretVal === createUserPayload.admin_secret ? Role.ADMIN : Role.USER;
+    const role =
+      createUserPayload.admin_secret &&
+      adminSecretVal === createUserPayload.admin_secret
+        ? Role.ADMIN
+        : Role.USER;
 
     delete createUserPayload.admin_secret;
-    
-    const user = await this.prisma.user.create({ data: { ...createUserPayload, role, isVerified: true } }) as User;
+
+    const user = (await this.prisma.user.create({
+      data: { ...createUserPayload, role, isVerified: true },
+    })) as User;
     const { password, ...rest } = user;
-    
+    void password;
+
     return {
       message: "Successfully created user",
-      user: rest
+      user: rest,
     };
-  };
+  }
 
   async retrieveUserRecords(email: string): Promise<{
-    message: string,
-    user: Partial<User>
+    message: string;
+    user: Partial<User>;
   }> {
     const user = await this.prisma.user.findUnique({
-      where: { email }
+      where: { email },
     });
     if (!user) throw new UnauthorizedException("Invalid user credentials");
 
     return {
       message: "Successfully retrieved user",
-      user
+      user,
     };
-  };
-};
+  }
+}

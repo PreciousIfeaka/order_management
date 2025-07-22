@@ -14,5 +14,5 @@ export class AuthResponseDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  access_token: string
-};
+  access_token: string;
+}

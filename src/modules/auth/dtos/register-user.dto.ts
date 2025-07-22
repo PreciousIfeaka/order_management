@@ -16,10 +16,10 @@ export class RegisterUserDto {
   @IsNotEmpty()
   @IsOptional()
   @IsString()
-  password?: string
+  password?: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  admin_secret: string
+  admin_secret: string;
 }

@@ -13,11 +13,11 @@ import { GoogleAuth } from "./google.service";
     JwtModule.register({
       global: true,
       secret: authConfig().jwtSecret,
-      signOptions: { expiresIn: authConfig().jwtExpiry }
+      signOptions: { expiresIn: authConfig().jwtExpiry },
     }),
-    PrismaModule
+    PrismaModule,
   ],
   providers: [AuthService, GoogleAuth],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}
