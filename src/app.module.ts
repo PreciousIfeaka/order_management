@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Logger, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -13,8 +13,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ChatRoomModule } from './modules/chat-room/chat-room.module';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { LoggerModule } from 'nestjs-pino';
-import { GoogleModule } from "./modules/google/google.module";
 
 @Module({
   controllers: [AppController],
@@ -39,6 +37,7 @@ import { GoogleModule } from "./modules/google/google.module";
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor
      },
+    Logger,
     AppService
   ],
   imports: [
@@ -51,23 +50,11 @@ import { GoogleModule } from "./modules/google/google.module";
         NODE_ENV: Joi.string().valid("development", "production", "test").required()
       })
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-          },
-        },
-        autoLogging: false
-      }
-    }),
     PrismaModule,
     UsersModule,
     AuthModule,
     OrdersModule,
     ChatRoomModule,
-    GoogleModule
   ]
 })
 export class AppModule {}

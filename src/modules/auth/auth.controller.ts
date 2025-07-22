@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, Query } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { RegisterUserDto } from "./dtos/register-user.dto";
 import { LoginDto } from "./dtos/login.dto";
@@ -92,4 +92,30 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return await this.authService.signIn(loginDto.email, loginDto.password);
   };
+
+  @ApiOperation({ summary: "Google Auth" })
+  @ApiResponse({
+    status: 200,
+    description: "User successfully signed in with Google",
+    type: AuthResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: "Invalid token",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            status_code: { type: "number", example: 401 },
+            message: { type: "string", example: "Invalid token" },
+            success: { type: "boolean", example: false },
+          },
+        },
+      },
+    },
+  })
+  @Post("google-auth")
+  async googleSignIn(@Query("token") token: string) {
+    return await this.authService.handleSocialAuth(token);
+  }
 }
